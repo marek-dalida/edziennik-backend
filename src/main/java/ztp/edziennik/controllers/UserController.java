@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ztp.edziennik.models.User;
 import ztp.edziennik.services.UserService;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
@@ -30,6 +32,20 @@ public class UserController {
 
         user.setPassword(null);
         return new ResponseEntity<>(user, headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<User> findUser(Principal principal) {
+        String email = principal.getName();
+        HttpHeaders headers = new HttpHeaders();
+
+        User user = userService.findByEmail(email).orElse(null);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        user.setPassword("");
+
+        return new ResponseEntity<>(user, headers, HttpStatus.OK);
     }
 
 }

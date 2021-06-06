@@ -26,7 +26,7 @@ public class SubjectController {
     }
 
     @PreAuthorize("hasRole('TEACHER')")
-    @RequestMapping(value = "/subject", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/subjects", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Page<Subject>> findSubjects(
             Principal principal,
             @RequestParam(defaultValue = "0") int page,
@@ -49,7 +49,7 @@ public class SubjectController {
 
 
     @PreAuthorize("hasRole('TEACHER')")
-    @RequestMapping(value = "/subject", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/subjects", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Subject> createSubject(
             Principal principal,
             @RequestBody Subject subject
@@ -60,7 +60,7 @@ public class SubjectController {
     }
 
     @PreAuthorize("hasRole('TEACHER')")
-    @RequestMapping(value = "/subject/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/subjects/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Subject> findById(
             @PathVariable("id") Long id,
             Principal principal
@@ -71,7 +71,7 @@ public class SubjectController {
     }
 
     @PreAuthorize("hasRole('TEACHER')")
-    @RequestMapping(value = "/subject/{id}", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/subjects/{id}", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Subject> deleteById(
             @PathVariable("id") Long id,
             Principal principal
