@@ -25,15 +25,14 @@ public class SubjectController {
         this.subjectService = subjectService;
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
     @RequestMapping(value = "/subjects", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Page<Subject>> findSubjects(
-            Principal principal,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size,
             @RequestParam(defaultValue = "") String sort,
             @RequestParam(defaultValue = "asc") String dir,
-            @RequestParam(defaultValue = "") String name
+            @RequestParam(defaultValue = "") String name,
+            Principal principal
 
     ) {
         HttpHeaders headers = new HttpHeaders();
@@ -51,15 +50,14 @@ public class SubjectController {
     @PreAuthorize("hasRole('TEACHER')")
     @RequestMapping(value = "/subjects", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Subject> createSubject(
-            Principal principal,
-            @RequestBody Subject subject
+            @RequestBody Subject subject,
+            Principal principal
     ) {
         HttpHeaders headers = new HttpHeaders();
         subjectService.saveSubject(subject);
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
     @RequestMapping(value = "/subjects/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Subject> findById(
             @PathVariable("id") Long id,
@@ -78,6 +76,7 @@ public class SubjectController {
     ) {
         HttpHeaders headers = new HttpHeaders();
         subjectService.deleteSubject(id);
+        //TODO: delete all other dependencies
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
