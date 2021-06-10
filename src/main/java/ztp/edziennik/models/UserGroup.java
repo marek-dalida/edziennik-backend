@@ -1,53 +1,27 @@
 package ztp.edziennik.models;
 
-import com.sun.istack.NotNull;
 
-import javax.persistence.Embeddable;
-import java.io.Serializable;
-import java.util.Objects;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 
-@Embeddable
-public class UserGroup implements Serializable {
-    @NotNull
-    private Long userId;
-    @NotNull
-    private Long groupId;
+@Entity
+public class UserGroup {
+
+    @EmbeddedId
+    private UserGroupId userGroupId;
 
     public UserGroup() {
     }
 
-    public UserGroup(Long userId, Long groupId) {
-        this.userId = userId;
-        this.groupId = groupId;
+    public UserGroup(UserGroupId userGroupId) {
+        this.userGroupId = userGroupId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserGroup userGroup = (UserGroup) o;
-        return Objects.equals(userId, userGroup.userId) && Objects.equals(groupId, userGroup.groupId);
+    public UserGroupId getUserGroupId() {
+        return userGroupId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, groupId);
-    }
-
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setUserGroupId(UserGroupId userGroupId) {
+        this.userGroupId = userGroupId;
     }
 }
