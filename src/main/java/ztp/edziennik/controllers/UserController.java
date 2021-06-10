@@ -5,10 +5,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ztp.edziennik.models.Member;
 import ztp.edziennik.models.User;
 import ztp.edziennik.services.UserService;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -46,6 +48,18 @@ public class UserController {
         user.setPassword("");
 
         return new ResponseEntity<>(user, headers, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/students", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Member>> findStudents(
+            @RequestParam(defaultValue = "") String search,
+            Principal principal) {
+        HttpHeaders headers = new HttpHeaders();
+
+        List<Member> students = userService.findStudents(search);
+
+        return new ResponseEntity<>(students, headers, HttpStatus.OK);
     }
 
 }
