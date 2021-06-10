@@ -52,6 +52,7 @@ public class SubjectGroupController {
         return new ResponseEntity<>(group, headers, HttpStatus.OK);
     }
 
+
     @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Page<SubjectGroup>> findAllSubjectsGroups(
             @RequestParam(defaultValue = "0") int page,

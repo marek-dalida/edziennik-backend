@@ -4,7 +4,6 @@ package ztp.edziennik.models;
 import javax.persistence.*;
 
 @Entity
-@Table
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
