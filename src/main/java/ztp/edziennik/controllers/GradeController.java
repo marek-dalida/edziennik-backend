@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ztp.edziennik.models.Grade;
 import ztp.edziennik.models.GradeData;
 import ztp.edziennik.models.User;
+import ztp.edziennik.models.UserGradeData;
 import ztp.edziennik.services.GradeService;
 import ztp.edziennik.services.UserService;
 import ztp.edziennik.utils.Role;
@@ -103,5 +104,15 @@ public class GradeController {
     ){
         List<GradeData> userGrades = gradeService.findUserGradesByGroupId(userId, groupId);
         return new ResponseEntity<>(userGrades, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @RequestMapping(value = "/group/{groupId}/grades", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<UserGradeData>> findGroupGrades(
+            @PathVariable("groupId") Long groupId,
+            Principal principal
+    ){
+        List<UserGradeData> groupGrades = gradeService.findGradesByGroupId(groupId);
+        return new ResponseEntity<>(groupGrades, HttpStatus.OK);
     }
 }
