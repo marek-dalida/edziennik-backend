@@ -8,6 +8,7 @@ import ztp.edziennik.models.GradeData;
 import ztp.edziennik.repositories.GradeDataRepository;
 import ztp.edziennik.repositories.GradeRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,14 @@ public class GradeService {
 
     public Optional<GradeData> findGradeDataById(Long id){
         return gradeDataRepository.findById(id);
+    }
+
+    public List<GradeData> findUserGrades(Long userId){
+        return gradeDataRepository.findByUserId(userId);
+    }
+
+    public List<GradeData> findUserGradesByGroupId(Long userId, Long groupId){
+        return gradeDataRepository.findByUserIdAndGradeType_Group_Id(userId, groupId);
     }
 
 }

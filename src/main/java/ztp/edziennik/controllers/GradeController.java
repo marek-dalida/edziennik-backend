@@ -15,6 +15,7 @@ import ztp.edziennik.utils.Role;
 
 import java.security.Principal;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -80,9 +81,27 @@ public class GradeController {
     ) {
         GradeData gradeData = gradeService.findGradeDataById(id).orElse(null);
 
-        return new ResponseEntity<GradeData>(gradeData, HttpStatus.OK);
-//        if (gradeData == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        } else return new ResponseEntity<>(gradeData, HttpStatus.OK);
+        if (gradeData == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else return new ResponseEntity<>(gradeData, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/{userId}/grades", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<GradeData>> findUserGrades(
+            @PathVariable("userId") Long userId,
+            Principal principal
+    ){
+        List<GradeData> userGrades = gradeService.findUserGrades(userId);
+        return new ResponseEntity<>(userGrades, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/{userId}/group/{groupId}/grades", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<GradeData>> findUserGradesByGroupId(
+            @PathVariable("userId") Long userId,
+            @PathVariable("groupId") Long groupId,
+            Principal principal
+    ){
+        List<GradeData> userGrades = gradeService.findUserGradesByGroupId(userId, groupId);
+        return new ResponseEntity<>(userGrades, HttpStatus.OK);
     }
 }
