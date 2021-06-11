@@ -62,4 +62,13 @@ public class UserController {
         return new ResponseEntity<>(students, headers, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/group/{groupId}/members", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Member>> findGroupMembers(
+            @PathVariable("groupId") Long groupId,
+            Principal principal
+    ) {
+        List<Member> groupMembers = userService.findGroupMembers(groupId);
+        return new ResponseEntity<>(groupMembers, HttpStatus.OK);
+    }
+
 }

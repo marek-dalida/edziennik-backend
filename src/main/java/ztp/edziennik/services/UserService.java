@@ -41,4 +41,8 @@ public class UserService {
         return memberRepository.findStudents(search);
     }
 
+    public List<Member> findGroupMembers(Long groupId) {
+        return memberRepository.findGroupMembers(groupId);
+    }
+
 }
