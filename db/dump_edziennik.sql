@@ -23,14 +23,14 @@ DROP TABLE IF EXISTS `grade`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `grade` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `grade_type_id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `value` float NOT NULL,
   `creation_date` datetime DEFAULT NULL,
   `teacher_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +39,7 @@ CREATE TABLE `grade` (
 
 LOCK TABLES `grade` WRITE;
 /*!40000 ALTER TABLE `grade` DISABLE KEYS */;
+INSERT INTO `grade` VALUES (1,1,2,5,'2021-06-11 11:37:32',1),(2,2,2,4,'2021-06-11 11:38:24',1),(3,3,2,3,'2021-06-11 16:21:05',1);
 /*!40000 ALTER TABLE `grade` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -50,13 +51,13 @@ DROP TABLE IF EXISTS `grade_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `grade_type` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `group_id` bigint(20) NOT NULL,
   `grade_weight` int(11) NOT NULL,
   `grade_name` varchar(40) NOT NULL,
   `grade_desc` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,6 +66,7 @@ CREATE TABLE `grade_type` (
 
 LOCK TABLES `grade_type` WRITE;
 /*!40000 ALTER TABLE `grade_type` DISABLE KEYS */;
+INSERT INTO `grade_type` VALUES (1,1,1,'Sprawdzian','Sprawdzian Trójkąty'),(2,1,1,'Kartkówka','Kartkówka Trójkąty'),(3,2,1,'Kartkówka','Kartkówka Romby');
 /*!40000 ALTER TABLE `grade_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -106,7 +108,7 @@ CREATE TABLE `subject_group` (
   `group_name` varchar(50) NOT NULL,
   `group_teacher_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,6 +117,7 @@ CREATE TABLE `subject_group` (
 
 LOCK TABLES `subject_group` WRITE;
 /*!40000 ALTER TABLE `subject_group` DISABLE KEYS */;
+INSERT INTO `subject_group` VALUES (1,1,'Matematyka klasa IV',1),(2,1,'Matematyka klasa V',1),(3,1,'Matematyka klasa VI',1),(4,1,'Matematyka klasa VII',1);
 /*!40000 ALTER TABLE `subject_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +136,7 @@ CREATE TABLE `user` (
   `password` varchar(255) NOT NULL,
   `role` enum('STUDENT','TEACHER','ADMIN') NOT NULL DEFAULT 'STUDENT',
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -142,7 +145,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Janina','Janik','janina.janik@gmail.com','$2a$04$CdsHGE9TJaHvRJTAK9O9Teffr4R.1pUG20glyt5aBX0mZATcDqJHG','TEACHER'),(2,'Jan','Nowak','jan.nowak@gmail.com','$2a$04$btKL/.X0mRQ/4DOaJJ630udsWb5RkiW2Lliep4.d57xQfTr0t9WCC','STUDENT');
+INSERT INTO `user` VALUES (1,'Janina','Janik','janina.janik@gmail.com','$2a$04$CdsHGE9TJaHvRJTAK9O9Teffr4R.1pUG20glyt5aBX0mZATcDqJHG','TEACHER'),(2,'Jan','Nowak','jan.nowak@gmail.com','$2a$04$btKL/.X0mRQ/4DOaJJ630udsWb5RkiW2Lliep4.d57xQfTr0t9WCC','STUDENT'),(3,'Jan','Kowalski','jan.kowalski@gmail.com','$2a$04$aFCjvybAQHeYvCsZShfXWO4FwFK4Euz8/9cRV7PiWWBefRTWXkKcS','STUDENT');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,6 +169,7 @@ CREATE TABLE `user_group` (
 
 LOCK TABLES `user_group` WRITE;
 /*!40000 ALTER TABLE `user_group` DISABLE KEYS */;
+INSERT INTO `user_group` VALUES (2,1),(2,2),(3,1);
 /*!40000 ALTER TABLE `user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -186,4 +190,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-06 21:46:07
+-- Dump completed on 2021-06-11 16:33:53
