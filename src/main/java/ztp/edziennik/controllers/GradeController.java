@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ztp.edziennik.models.Grade;
+import ztp.edziennik.models.GradeData;
 import ztp.edziennik.models.User;
 import ztp.edziennik.services.GradeService;
 import ztp.edziennik.services.UserService;
@@ -72,4 +73,16 @@ public class GradeController {
     }
 
 
+    @RequestMapping(value = "/grades/{id}/details", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<GradeData> findGradeDataById(
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
+        GradeData gradeData = gradeService.findGradeDataById(id).orElse(null);
+
+        return new ResponseEntity<GradeData>(gradeData, HttpStatus.OK);
+//        if (gradeData == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        } else return new ResponseEntity<>(gradeData, HttpStatus.OK);
+    }
 }
