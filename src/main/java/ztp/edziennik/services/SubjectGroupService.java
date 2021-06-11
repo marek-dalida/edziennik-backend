@@ -38,8 +38,8 @@ public class SubjectGroupService {
         return subjectGroupRepository.findById(id);
     }
 
-    public void createSubjectGroup(SubjectGroup model){
-        subjectGroupRepository.save(model);
+    public SubjectGroup createSubjectGroup(SubjectGroup model){
+        return subjectGroupRepository.save(model);
     }
 
     public void  deleteSubjectGroup(Long id){

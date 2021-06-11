@@ -54,8 +54,8 @@ public class SubjectController {
             Principal principal
     ) {
         HttpHeaders headers = new HttpHeaders();
-        subjectService.saveSubject(subject);
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        Subject newSubject = subjectService.saveSubject(subject);
+        return new ResponseEntity<>(newSubject,headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/subjects/{id}", method = RequestMethod.GET, produces = "application/json")

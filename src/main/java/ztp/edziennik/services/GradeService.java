@@ -22,8 +22,8 @@ public class GradeService {
         return gradeRepository.findById(id);
     }
 
-    public void createGrade(Grade model){
-        gradeRepository.save(model);
+    public Grade createGrade(Grade model){
+        return gradeRepository.save(model);
     }
 
     public void deleteGradeById(Long id){

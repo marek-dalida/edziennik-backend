@@ -80,8 +80,8 @@ public class SubjectGroupController {
             Principal principal
     ) {
         HttpHeaders headers = new HttpHeaders();
-        subjectGroupService.createSubjectGroup( model);
-        return new ResponseEntity<>(model, headers, HttpStatus.OK);
+        SubjectGroup newGroup = subjectGroupService.createSubjectGroup( model);
+        return new ResponseEntity<>(newGroup, headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('TEACHER')")

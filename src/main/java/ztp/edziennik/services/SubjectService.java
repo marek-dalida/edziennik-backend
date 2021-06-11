@@ -24,8 +24,8 @@ public class SubjectService {
         return subjectRepository.findAll(pageable);
     }
 
-    public void saveSubject(Subject model){
-        subjectRepository.save(model);
+    public Subject saveSubject(Subject model){
+        return subjectRepository.save(model);
     }
 
     public Page<Subject> findByNameContains(String name, int page, int size, String sort, String dir){

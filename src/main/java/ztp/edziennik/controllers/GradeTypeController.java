@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ztp.edziennik.models.GradeType;
 import ztp.edziennik.services.GradeTypeService;
@@ -24,6 +25,7 @@ public class GradeTypeController {
         this.gradeTypeService = gradeTypeService;
     }
 
+    @PreAuthorize("hasRole('TEACHER')")
     @RequestMapping(value = "/grade/types", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<GradeType> createGrade(
             @RequestBody GradeType gradeType,
@@ -44,6 +46,7 @@ public class GradeTypeController {
         return new ResponseEntity<>(gradeType, headers, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('TEACHER')")
     @RequestMapping(value = "/grade/types/{id}", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<GradeType> deleteById(
             @PathVariable("id") Long id,
