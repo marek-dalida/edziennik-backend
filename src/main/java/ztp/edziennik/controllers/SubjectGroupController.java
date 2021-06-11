@@ -116,7 +116,7 @@ public class SubjectGroupController {
     }
 
     @PreAuthorize("hasRole('TEACHER')")
-    @RequestMapping(value = "/group/user", method = RequestMethod.DELETE, produces = "application/json" )
+    @RequestMapping(value = "/group/users", method = RequestMethod.DELETE, produces = "application/json" )
     public ResponseEntity<SubjectGroup> deleteUserFromGroup(
             @RequestParam Long userId,
             @RequestParam Long groupId,
@@ -139,7 +139,7 @@ public class SubjectGroupController {
     }
 
     @PreAuthorize("hasRole('TEACHER')")
-    @RequestMapping(value = "/group/user", method = RequestMethod.POST, produces = "application/json" )
+    @RequestMapping(value = "/group/users", method = RequestMethod.POST, produces = "application/json" )
     public ResponseEntity<SubjectGroup> addUserToGroup(
             @RequestBody UserGroupId userGroupId,
             Principal principal

@@ -21,7 +21,7 @@ public class GradeController {
         this.gradeService = gradeService;
     }
 
-    @RequestMapping(value = "/grade", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/grades", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Grade> createGrade(
             @RequestBody Grade grade,
             Principal principal
@@ -30,7 +30,7 @@ public class GradeController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/grade/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/grades/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Grade> findByGradeId(
             @PathVariable("id") Long id,
             Principal principal
@@ -41,7 +41,7 @@ public class GradeController {
         } else return new ResponseEntity<>(grade, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/grade/{id}", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/grades/{id}", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Grade> deleteGrade(
             @PathVariable("id") Long id,
             Principal principal

@@ -16,7 +16,7 @@ public class Grade {
 
     private Long gradeTypeId;
     private Long userId;
-    private float value;
+    private Float value;
     private Date creationDate;
     private Long teacherId;
 
@@ -47,11 +47,11 @@ public class Grade {
         this.userId = userId;
     }
 
-    public float getValue() {
+    public Float getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(Float value) {
         this.value = value;
     }
 

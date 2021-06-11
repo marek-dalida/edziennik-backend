@@ -10,6 +10,7 @@ import ztp.edziennik.models.GradeType;
 import ztp.edziennik.services.GradeTypeService;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -23,17 +24,17 @@ public class GradeTypeController {
         this.gradeTypeService = gradeTypeService;
     }
 
-    @RequestMapping(value = "/grade/type", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/grade/types", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<GradeType> createGrade(
             @RequestBody GradeType gradeType,
             Principal principal
     ) {
         HttpHeaders headers = new HttpHeaders();
-        gradeTypeService.createGradeType(gradeType);
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        GradeType newGradeType = gradeTypeService.createGradeType(gradeType);
+        return new ResponseEntity<>(newGradeType, headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/grade/type/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/grade/types/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<GradeType> findById(
             @PathVariable("id") Long id,
             Principal principal
@@ -43,15 +44,23 @@ public class GradeTypeController {
         return new ResponseEntity<>(gradeType, headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/grade/type/{id}", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/grade/types/{id}", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<GradeType> deleteById(
             @PathVariable("id") Long id,
             Principal principal
     ) {
         HttpHeaders headers = new HttpHeaders();
         gradeTypeService.deleteGradeType(id);
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/group/{groupId}/grade/types", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<GradeType>> findGradeTypesByGroupId(
+            @PathVariable("groupId") Long id,
+            Principal principal
+    ){
+        HttpHeaders headers = new HttpHeaders();
+        List<GradeType> gradeTypes = gradeTypeService.findGradeTypesByGroupId(id);
+        return new ResponseEntity<>(gradeTypes, headers, HttpStatus.OK);
+    }
 }

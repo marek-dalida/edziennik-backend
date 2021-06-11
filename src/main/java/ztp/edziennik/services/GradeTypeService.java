@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ztp.edziennik.models.GradeType;
 import ztp.edziennik.repositories.GradeTypeRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -17,8 +18,8 @@ public class GradeTypeService {
         this.gradeTypeRepository = gradeTypeRepository;
     }
 
-    public void createGradeType(GradeType model){
-        gradeTypeRepository.save(model);
+    public GradeType createGradeType(GradeType model){
+       return gradeTypeRepository.save(model);
     }
 
     public Optional<GradeType> getGradeTypeById(Long id){
@@ -28,6 +29,10 @@ public class GradeTypeService {
     public void deleteGradeType(Long id){
         GradeType gradeType = getGradeTypeById(id).get();
         gradeTypeRepository.delete(gradeType);
+    }
+
+    public List<GradeType> findGradeTypesByGroupId(Long groupId){
+        return gradeTypeRepository.findByGroupId(groupId);
     }
 
 
