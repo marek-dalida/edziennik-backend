@@ -66,4 +66,13 @@ public class GradeTypeController {
         List<GradeType> gradeTypes = gradeTypeService.findGradeTypesByGroupId(id);
         return new ResponseEntity<>(gradeTypes, headers, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/grade/types", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<GradeType>> getAllGradeTypes(
+            Principal principal
+    ){
+        HttpHeaders headers = new HttpHeaders();
+        List<GradeType> gradeTypes = gradeTypeService.getAllGradeTypes();
+        return new ResponseEntity<>(gradeTypes, headers, HttpStatus.OK);
+    }
 }

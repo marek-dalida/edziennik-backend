@@ -35,5 +35,9 @@ public class GradeTypeService {
         return gradeTypeRepository.findByGroupId(groupId);
     }
 
+    public List<GradeType> getAllGradeTypes(){
+        return gradeTypeRepository.findAll();
+    }
+
 
 }
