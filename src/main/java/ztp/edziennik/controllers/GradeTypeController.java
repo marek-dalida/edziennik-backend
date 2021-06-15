@@ -7,8 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ztp.edziennik.exceptions.UserNotFoundException;
 import ztp.edziennik.models.GradeType;
+import ztp.edziennik.models.User;
 import ztp.edziennik.services.GradeTypeService;
+import ztp.edziennik.services.UserService;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,10 +22,12 @@ import java.util.List;
 public class GradeTypeController {
 
     GradeTypeService gradeTypeService;
+    UserService userService;
 
     @Autowired
-    public GradeTypeController(GradeTypeService gradeTypeService) {
+    public GradeTypeController(GradeTypeService gradeTypeService, UserService userService) {
         this.gradeTypeService = gradeTypeService;
+        this.userService = userService;
     }
 
     @PreAuthorize("hasRole('TEACHER')")
@@ -61,7 +66,7 @@ public class GradeTypeController {
     public ResponseEntity<List<GradeType>> findGradeTypesByGroupId(
             @PathVariable("groupId") Long id,
             Principal principal
-    ){
+    ) {
         HttpHeaders headers = new HttpHeaders();
         List<GradeType> gradeTypes = gradeTypeService.findGradeTypesByGroupId(id);
         return new ResponseEntity<>(gradeTypes, headers, HttpStatus.OK);
@@ -70,9 +75,21 @@ public class GradeTypeController {
     @RequestMapping(value = "/grade/types", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<GradeType>> getAllGradeTypes(
             Principal principal
-    ){
+    ) {
         HttpHeaders headers = new HttpHeaders();
         List<GradeType> gradeTypes = gradeTypeService.getAllGradeTypes();
         return new ResponseEntity<>(gradeTypes, headers, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @RequestMapping(value = "/teacher/grade/types", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<GradeType>> findTeacherGradeTypes(
+            Principal principal
+    ) {
+        String email = principal.getName();
+        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+
+        List<GradeType> teacherGradeTypes = gradeTypeService.findTeacherGradeTypes(user.getUserId());
+        return new ResponseEntity<>(teacherGradeTypes, HttpStatus.OK);
     }
 }

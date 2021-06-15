@@ -39,5 +39,9 @@ public class GradeTypeService {
         return gradeTypeRepository.findAll();
     }
 
+    public List<GradeType> findTeacherGradeTypes(Long teacherId){
+        return gradeTypeRepository.findTeacherGradeTypes(teacherId);
+    }
+
 
 }
