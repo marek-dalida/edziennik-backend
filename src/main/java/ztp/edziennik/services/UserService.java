@@ -5,7 +5,10 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import ztp.edziennik.models.Member;
 import ztp.edziennik.models.User;
+import ztp.edziennik.models.UserGroup;
+import ztp.edziennik.models.UserGroupId;
 import ztp.edziennik.repositories.MemberRepository;
+import ztp.edziennik.repositories.UserGroupRepository;
 import ztp.edziennik.repositories.UserRepository;
 
 import java.util.List;
@@ -14,13 +17,14 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-
     private final MemberRepository memberRepository;
+    private final UserGroupRepository userGroupRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, MemberRepository memberRepository) {
+    public UserService(UserRepository userRepository, MemberRepository memberRepository, UserGroupRepository userGroupRepository) {
         this.userRepository = userRepository;
         this.memberRepository = memberRepository;
+        this.userGroupRepository = userGroupRepository;
     }
 
     public void saveUser(User model) {
@@ -43,6 +47,10 @@ public class UserService {
 
     public List<Member> findGroupMembers(Long groupId) {
         return memberRepository.findGroupMembers(groupId);
+    }
+
+    public Optional<UserGroup> findUserGroupById(UserGroupId userGroupId){
+        return userGroupRepository.findById(userGroupId);
     }
 
 }

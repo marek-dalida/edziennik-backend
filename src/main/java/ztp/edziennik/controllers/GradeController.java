@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ztp.edziennik.exceptions.NoPermissionException;
+import ztp.edziennik.exceptions.NotGroupMemberException;
 import ztp.edziennik.exceptions.ObjectNotFoundException;
 import ztp.edziennik.exceptions.UserNotFoundException;
-import ztp.edziennik.models.Grade;
-import ztp.edziennik.models.GradeData;
-import ztp.edziennik.models.User;
-import ztp.edziennik.models.UserGradeData;
+import ztp.edziennik.models.*;
 import ztp.edziennik.services.GradeService;
+import ztp.edziennik.services.GradeTypeService;
+import ztp.edziennik.services.SubjectGroupService;
 import ztp.edziennik.services.UserService;
 import ztp.edziennik.utils.Role;
 
@@ -27,11 +27,13 @@ import java.util.List;
 public class GradeController {
     GradeService gradeService;
     UserService userService;
+    SubjectGroupService subjectGroupService;
 
     @Autowired
-    public GradeController(GradeService gradeService, UserService userService) {
+    public GradeController(GradeService gradeService, UserService userService, SubjectGroupService subjectGroupService) {
         this.gradeService = gradeService;
         this.userService = userService;
+        this.subjectGroupService = subjectGroupService;
     }
 
 
@@ -42,8 +44,14 @@ public class GradeController {
             Principal principal
     ) {
         String email = principal.getName();
-        User user = userService.findByEmail(email).orElseThrow(() ->  new UserNotFoundException(email));
-        if(!user.getRole().equals(Role.TEACHER)) throw new NoPermissionException(email);
+        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        if (!user.getRole().equals(Role.TEACHER)) throw new NoPermissionException(email);
+        SubjectGroup gradeSubjectGroup = subjectGroupService
+                .findGroupByGradeType(grade.getGradeTypeId())
+                .orElseThrow(() -> new ObjectNotFoundException("Group by GradeType with id= " + grade.getGradeTypeId() + " not found"));
+        if (!user.getUserId().equals(gradeSubjectGroup.getGroupTeacherId())) throw new NoPermissionException(email);
+        userService.findUserGroupById(new UserGroupId(grade.getUserId(), gradeSubjectGroup.getId()))
+                .orElseThrow(() -> new NotGroupMemberException(grade.getUserId()));
 
 
         grade.setCreationDate(new Date());
@@ -88,7 +96,7 @@ public class GradeController {
     public ResponseEntity<List<GradeData>> findUserGrades(
             @PathVariable("userId") Long userId,
             Principal principal
-    ){
+    ) {
         List<GradeData> userGrades = gradeService.findUserGrades(userId);
         return new ResponseEntity<>(userGrades, HttpStatus.OK);
     }
@@ -98,7 +106,7 @@ public class GradeController {
             @PathVariable("userId") Long userId,
             @PathVariable("groupId") Long groupId,
             Principal principal
-    ){
+    ) {
         List<GradeData> userGrades = gradeService.findUserGradesByGroupId(userId, groupId);
         return new ResponseEntity<>(userGrades, HttpStatus.OK);
     }
@@ -108,7 +116,7 @@ public class GradeController {
     public ResponseEntity<List<UserGradeData>> findGroupGrades(
             @PathVariable("groupId") Long groupId,
             Principal principal
-    ){
+    ) {
         List<UserGradeData> groupGrades = gradeService.findGradesByGroupId(groupId);
         return new ResponseEntity<>(groupGrades, HttpStatus.OK);
     }

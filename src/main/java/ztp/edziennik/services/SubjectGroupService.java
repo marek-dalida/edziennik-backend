@@ -65,4 +65,8 @@ public class SubjectGroupService {
     public void addUserToGroup(UserGroup model){
          userGroupRepository.save(model);
     }
+
+    public Optional<SubjectGroup> findGroupByGradeType(Long gradeType){
+        return subjectGroupRepository.findGroupByGradeType(gradeType);
+    }
 }

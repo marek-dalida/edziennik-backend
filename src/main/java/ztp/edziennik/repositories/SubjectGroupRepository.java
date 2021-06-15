@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import ztp.edziennik.models.SubjectGroup;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 public interface SubjectGroupRepository extends PagingAndSortingRepository<SubjectGroup, Long> {
     Page<SubjectGroup> findBySubjectId(Long subjectId, Pageable pageable);
@@ -19,5 +20,10 @@ public interface SubjectGroupRepository extends PagingAndSortingRepository<Subje
     Page<SubjectGroup> findUserGroups(@Param("userId") Long userId, Pageable pageable);
 
     Page<SubjectGroup> findByGroupTeacherId(Long groupTeacherId, Pageable pageable);
+
+    @Query("select sg from GradeType as gt\n" +
+            " join  SubjectGroup as sg on gt.groupId = sg.id\n" +
+            " where gt.id = :gradeType")
+    Optional<SubjectGroup> findGroupByGradeType(@Param("gradeType") Long gradeType);
 
 }
