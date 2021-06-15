@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ztp.edziennik.exceptions.NoPermissionException;
+import ztp.edziennik.exceptions.ObjectNotFoundException;
+import ztp.edziennik.exceptions.UserNotFoundException;
 import ztp.edziennik.models.Grade;
 import ztp.edziennik.models.GradeData;
 import ztp.edziennik.models.User;
@@ -39,18 +42,14 @@ public class GradeController {
             Principal principal
     ) {
         String email = principal.getName();
-        User user = userService.findByEmail(email).orElse(null);
-
-        if(user != null && user.getRole().equals(Role.TEACHER)){
-            grade.setCreationDate(new Date());
-            grade.setTeacherId(user.getUserId());
-            Grade newGrade = gradeService.createGrade(grade);
-            return new ResponseEntity<>(newGrade, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        User user = userService.findByEmail(email).orElseThrow(() ->  new UserNotFoundException(email));
+        if(!user.getRole().equals(Role.TEACHER)) throw new NoPermissionException(email);
 
 
+        grade.setCreationDate(new Date());
+        grade.setTeacherId(user.getUserId());
+        Grade newGrade = gradeService.createGrade(grade);
+        return new ResponseEntity<>(newGrade, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/grades/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -58,10 +57,8 @@ public class GradeController {
             @PathVariable("id") Long id,
             Principal principal
     ) {
-        Grade grade = gradeService.findGradeById(id).orElse(null);
-        if (grade == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else return new ResponseEntity<>(grade, HttpStatus.OK);
+        Grade grade = gradeService.findGradeById(id).orElseThrow(() -> new ObjectNotFoundException(id, "Grade"));
+        return new ResponseEntity<>(grade, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('TEACHER')")
