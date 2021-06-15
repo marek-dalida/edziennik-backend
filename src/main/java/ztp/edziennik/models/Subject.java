@@ -16,6 +16,12 @@ public class Subject {
     public Subject() {
     }
 
+    public Subject(Long id, String subjectName, String subjectDesc) {
+        this.id = id;
+        this.subjectName = subjectName;
+        this.subjectDesc = subjectDesc;
+    }
+
     public Long getId() {
         return id;
     }
