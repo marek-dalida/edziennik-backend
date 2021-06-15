@@ -34,39 +34,38 @@ public class SubjectGroupService {
         return subjectGroupRepository.findBySubjectId(subjectId, pageable);
     }
 
-    public Optional<SubjectGroup> findById(Long id){
+    public Optional<SubjectGroup> findById(Long id) {
         return subjectGroupRepository.findById(id);
     }
 
-    public SubjectGroup createSubjectGroup(SubjectGroup model){
+    public SubjectGroup createSubjectGroup(SubjectGroup model) {
         return subjectGroupRepository.save(model);
     }
 
-    public void  deleteSubjectGroup(Long id){
-        SubjectGroup sg = findById(id).orElseThrow(() -> new RuntimeException("Not found subject group= " + id ));
-        subjectGroupRepository.delete(sg);
+    public void deleteSubjectGroup(SubjectGroup subjectGroup) {
+        subjectGroupRepository.delete(subjectGroup);
     }
 
-    public Page<SubjectGroup> findUserGroups(User user, int page, int size, String sort, String dir){
+    public Page<SubjectGroup> findUserGroups(User user, int page, int size, String sort, String dir) {
         Pageable pageable = ServiceUtils.setPageableWithSort(page, size, sort, dir);
         Page<SubjectGroup> groups;
-        if ( user.getRole() == Role.TEACHER){
+        if (user.getRole() == Role.TEACHER) {
             groups = subjectGroupRepository.findByGroupTeacherId(user.getUserId(), pageable);
         } else {
-             groups =subjectGroupRepository.findUserGroups(user.getUserId(), pageable);
+            groups = subjectGroupRepository.findUserGroups(user.getUserId(), pageable);
         }
         return groups;
     }
 
-    public void removeUserFromGroup(Long userId, Long groupId){
+    public void removeUserFromGroup(Long userId, Long groupId) {
         userGroupRepository.deleteUserFromGroup(userId, groupId);
     }
 
-    public void addUserToGroup(UserGroup model){
-         userGroupRepository.save(model);
+    public void addUserToGroup(UserGroup model) {
+        userGroupRepository.save(model);
     }
 
-    public Optional<SubjectGroup> findGroupByGradeType(Long gradeType){
+    public Optional<SubjectGroup> findGroupByGradeType(Long gradeType) {
         return subjectGroupRepository.findGroupByGradeType(gradeType);
     }
 }

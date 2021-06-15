@@ -12,7 +12,6 @@ import ztp.edziennik.exceptions.ObjectNotFoundException;
 import ztp.edziennik.exceptions.UserNotFoundException;
 import ztp.edziennik.models.*;
 import ztp.edziennik.services.GradeService;
-import ztp.edziennik.services.GradeTypeService;
 import ztp.edziennik.services.SubjectGroupService;
 import ztp.edziennik.services.UserService;
 import ztp.edziennik.utils.Role;
@@ -60,11 +59,13 @@ public class GradeController {
         return new ResponseEntity<>(newGrade, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @RequestMapping(value = "/grades/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Grade> findByGradeId(
             @PathVariable("id") Long id,
             Principal principal
     ) {
+        userService.findByEmail(principal.getName()).orElseThrow(() -> new UserNotFoundException(principal.getName()));
         Grade grade = gradeService.findGradeById(id).orElseThrow(() -> new ObjectNotFoundException(id, "Grade"));
         return new ResponseEntity<>(grade, HttpStatus.OK);
     }
@@ -75,38 +76,50 @@ public class GradeController {
             @PathVariable("id") Long id,
             Principal principal
     ) {
-        gradeService.deleteGradeById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Grade grade = gradeService.findGradeById(id).orElseThrow(() -> new ObjectNotFoundException(id, "Grade"));
+        String email = principal.getName();
+        User user = userService.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        SubjectGroup gradeSubjectGroup = subjectGroupService
+                .findGroupByGradeType(grade.getGradeTypeId())
+                .orElseThrow(() -> new ObjectNotFoundException("Group by GradeType with id= " + grade.getGradeTypeId() + " not found"));
+        if ((!user.getRole().equals(Role.TEACHER)) || (!user.getUserId().equals(gradeSubjectGroup.getGroupTeacherId()))) {
+            throw new NoPermissionException(email);
+        }
+
+        gradeService.deleteGradeById(grade);
+        return new ResponseEntity<>(grade, HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @RequestMapping(value = "/grades/{id}/details", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<GradeData> findGradeDataById(
             @PathVariable("id") Long id,
             Principal principal
     ) {
-        GradeData gradeData = gradeService.findGradeDataById(id).orElse(null);
-
-        if (gradeData == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else return new ResponseEntity<>(gradeData, HttpStatus.OK);
+        userService.findByEmail(principal.getName()).orElseThrow(() -> new UserNotFoundException(principal.getName()));
+        GradeData gradeData = gradeService.findGradeDataById(id).orElseThrow(() -> new ObjectNotFoundException(id, "Grade"));
+        return new ResponseEntity<>(gradeData, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @RequestMapping(value = "/user/{userId}/grades", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<GradeData>> findUserGrades(
             @PathVariable("userId") Long userId,
             Principal principal
     ) {
+        userService.findByEmail(principal.getName()).orElseThrow(() -> new UserNotFoundException(principal.getName()));
         List<GradeData> userGrades = gradeService.findUserGrades(userId);
         return new ResponseEntity<>(userGrades, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER', 'ADMIN')")
     @RequestMapping(value = "/user/{userId}/group/{groupId}/grades", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<GradeData>> findUserGradesByGroupId(
             @PathVariable("userId") Long userId,
             @PathVariable("groupId") Long groupId,
             Principal principal
     ) {
+        userService.findByEmail(principal.getName()).orElseThrow(() -> new UserNotFoundException(principal.getName()));
         List<GradeData> userGrades = gradeService.findUserGradesByGroupId(userId, groupId);
         return new ResponseEntity<>(userGrades, HttpStatus.OK);
     }
@@ -117,6 +130,7 @@ public class GradeController {
             @PathVariable("groupId") Long groupId,
             Principal principal
     ) {
+        userService.findByEmail(principal.getName()).orElseThrow(() -> new UserNotFoundException(principal.getName()));
         List<UserGradeData> groupGrades = gradeService.findGradesByGroupId(groupId);
         return new ResponseEntity<>(groupGrades, HttpStatus.OK);
     }
