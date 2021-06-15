@@ -11,6 +11,7 @@ import ztp.edziennik.exceptions.ObjectNotFoundException;
 import ztp.edziennik.exceptions.UserNotFoundException;
 import ztp.edziennik.models.GradeType;
 import ztp.edziennik.models.User;
+import ztp.edziennik.services.GradeService;
 import ztp.edziennik.services.GradeTypeService;
 import ztp.edziennik.services.UserService;
 
@@ -24,11 +25,13 @@ public class GradeTypeController {
 
     GradeTypeService gradeTypeService;
     UserService userService;
+    GradeService gradeService;
 
     @Autowired
-    public GradeTypeController(GradeTypeService gradeTypeService, UserService userService) {
+    public GradeTypeController(GradeTypeService gradeTypeService, UserService userService, GradeService gradeService) {
         this.gradeTypeService = gradeTypeService;
         this.userService = userService;
+        this.gradeService = gradeService;
     }
 
     @PreAuthorize("hasRole('TEACHER')")
@@ -59,7 +62,13 @@ public class GradeTypeController {
             Principal principal
     ) {
         HttpHeaders headers = new HttpHeaders();
-        gradeTypeService.deleteGradeType(id);
+
+        GradeType gradeType = gradeTypeService.getGradeTypeById(id).orElseThrow(() -> new ObjectNotFoundException(id, "GradeType"));
+
+        //delete all grades with this gradeType
+        gradeService.deleteGradesByGradeType(gradeType.getId());
+
+        gradeTypeService.deleteGradeType(gradeType);
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 

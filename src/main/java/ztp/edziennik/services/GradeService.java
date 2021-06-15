@@ -37,8 +37,7 @@ public class GradeService {
         return gradeRepository.save(model);
     }
 
-    public void deleteGradeById(Long id) {
-        Grade grade = findGradeById(id).orElseThrow(() -> new RuntimeException("grade not found"));
+    public void deleteGradeById(Grade grade) {
         gradeRepository.delete(grade);
     }
 
@@ -56,6 +55,10 @@ public class GradeService {
 
     public List<UserGradeData> findGradesByGroupId(Long groupId) {
         return userGradeDataRepository.findByGradeType_Group_Id(groupId);
+    }
+
+    public void deleteGradesByGradeType(Long gradeTypeId){
+        gradeRepository.deleteByGradeTypeId(gradeTypeId);
     }
 
 }

@@ -26,8 +26,7 @@ public class GradeTypeService {
         return gradeTypeRepository.findById(id);
     }
 
-    public void deleteGradeType(Long id){
-        GradeType gradeType = getGradeTypeById(id).get();
+    public void deleteGradeType(GradeType gradeType){
         gradeTypeRepository.delete(gradeType);
     }
 
