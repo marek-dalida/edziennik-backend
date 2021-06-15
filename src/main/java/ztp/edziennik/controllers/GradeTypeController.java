@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ztp.edziennik.exceptions.ObjectNotFoundException;
 import ztp.edziennik.exceptions.UserNotFoundException;
 import ztp.edziennik.models.GradeType;
 import ztp.edziennik.models.User;
@@ -47,8 +48,8 @@ public class GradeTypeController {
             Principal principal
     ) {
         HttpHeaders headers = new HttpHeaders();
-        GradeType gradeType = gradeTypeService.getGradeTypeById(id).get();
-        return new ResponseEntity<>(gradeType, headers, HttpStatus.CREATED);
+        GradeType gradeType = gradeTypeService.getGradeTypeById(id).orElseThrow(() -> new ObjectNotFoundException(id, "GradeType"));
+        return new ResponseEntity<>(gradeType, headers, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('TEACHER')")
