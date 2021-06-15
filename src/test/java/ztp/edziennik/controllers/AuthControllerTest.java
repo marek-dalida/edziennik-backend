@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ztp.edziennik.constants.TestHelper;
-import ztp.edziennik.models.User;
 import ztp.edziennik.repositories.UserRepository;
 
 
@@ -22,7 +21,6 @@ import java.util.Optional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//Test demands created user "janina.janik@gmail.com", "ztp2021" on database
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -36,8 +34,7 @@ public class AuthControllerTest extends TestHelper {
 
     @Before
     public void setUp(){
-        User user = mockTeacher1;
-        Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findByEmail(mockTeacher1.getEmail())).thenReturn(Optional.of(mockTeacher1));
     }
 
     @Test
@@ -45,12 +42,12 @@ public class AuthControllerTest extends TestHelper {
         String username = "jan.kowal@gmail.com";
         String password = "ztp2021";
 
-        String authUrlString = "http://localhost:8080/api/auth?username=" + username + "&password=" + password;
+        String authUrlString = baseUrl +"/auth?username=" + username + "&password=" + password;
 
         MvcResult result = mockMvc.perform(get(authUrlString)).andExpect(status().isOk()).andReturn();
         String response = result.getResponse().getContentAsString();
 
-        mockMvc.perform(get("http://localhost:8080/api/students")
+        mockMvc.perform(get(baseUrl + "/students")
                 .header("Authorization", response)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -61,14 +58,14 @@ public class AuthControllerTest extends TestHelper {
         String username = "jan.kowal@gmail.com";
         String password = "bledne";
 
-        String authUrlString = "http://localhost:8080/api/auth?username=" + username + "&password=" + password;
+        String authUrlString = baseUrl + "/auth?username=" + username + "&password=" + password;
 
         mockMvc.perform(get(authUrlString)).andExpect(status().isUnauthorized());
     }
 
     @Test
     public void requestWithoutAuth_shouldReturnForbidden() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/api/groups"))
+        mockMvc.perform(get(baseUrl + "/groups"))
                 .andExpect(status().isForbidden());
     }
 

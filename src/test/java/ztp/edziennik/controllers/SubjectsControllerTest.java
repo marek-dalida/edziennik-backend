@@ -11,13 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import ztp.edziennik.constants.TestHelper;
-import ztp.edziennik.models.Subject;
-import ztp.edziennik.models.User;
 import ztp.edziennik.repositories.SubjectRepository;
 import ztp.edziennik.repositories.UserRepository;
-import ztp.edziennik.services.SubjectService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,15 +39,15 @@ public class SubjectsControllerTest extends TestHelper {
 
     @Before
     public void setUp(){
-        User user = mockTeacher1;
-        Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findByEmail(mockTeacher1.getEmail())).thenReturn(Optional.of(mockTeacher1));
         Mockito.when(subjectRepository.findById(999L)).thenReturn(Optional.empty());
+        Mockito.when(subjectRepository.findById(777L)).thenReturn(Optional.of(mockSubject1));
     }
 
     @Test
     public void whenGetSubjectById_thenExceptionNotFoundObject() throws Exception{
 
-        mockMvc.perform(delete("http://localhost:8080/api/subjects/999")
+        mockMvc.perform(delete(baseUrl +"/subjects/999")
                 .header("Authorization", tokenTeacher1)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -60,4 +56,14 @@ public class SubjectsControllerTest extends TestHelper {
                 .andExpect(jsonPath("$.request").value("uri=/api/subjects/999"));
     }
 
+    @Test
+    public void whenGetSubjectById_thenGetObject_with200Status() throws Exception {
+        mockMvc.perform(get(baseUrl + "/subjects/777")
+                .header("Authorization", tokenTeacher1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(mockSubject1.getId()))
+                .andExpect(jsonPath("$.subjectName").value(mockSubject1.getSubjectName()))
+                .andExpect(jsonPath("$.subjectDesc").value(mockSubject1.getSubjectDesc()));
+    }
 }
