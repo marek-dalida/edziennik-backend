@@ -33,7 +33,7 @@ public class AuthControllerTest extends TestHelper {
     private UserRepository userRepository;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         Mockito.when(userRepository.findByEmail(mockTeacher1.getEmail())).thenReturn(Optional.of(mockTeacher1));
     }
 
@@ -42,7 +42,7 @@ public class AuthControllerTest extends TestHelper {
         String username = "jan.kowal@gmail.com";
         String password = "ztp2021";
 
-        String authUrlString = baseUrl +"/auth?username=" + username + "&password=" + password;
+        String authUrlString = baseUrl + "/auth?username=" + username + "&password=" + password;
 
         MvcResult result = mockMvc.perform(get(authUrlString)).andExpect(status().isOk()).andReturn();
         String response = result.getResponse().getContentAsString();

@@ -16,6 +16,13 @@ public class SubjectGroup {
     public SubjectGroup() {
     }
 
+    public SubjectGroup(Long id, Long subjectId, String groupName, Long groupTeacherId) {
+        this.id = id;
+        this.subjectId = subjectId;
+        this.groupName = groupName;
+        this.groupTeacherId = groupTeacherId;
+    }
+
     public Long getId() {
         return id;
     }
