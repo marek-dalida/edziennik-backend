@@ -1,10 +1,9 @@
 package ztp.edziennik.constants;
 
-import ztp.edziennik.models.GradeType;
-import ztp.edziennik.models.Subject;
-import ztp.edziennik.models.SubjectGroup;
-import ztp.edziennik.models.User;
+import ztp.edziennik.models.*;
 import ztp.edziennik.utils.Role;
+
+import java.util.Date;
 
 public class TestHelper {
     public static String baseUrl = "http://localhost:8080/api";
@@ -20,5 +19,5 @@ public class TestHelper {
     public static GradeType mockGradeType1 = new GradeType(1L, 1L, 1, "Kartkówka", "Kartkówka Starożytny Egipt");
     public static GradeType mockGradeType2 = new GradeType(2L, 2L, 1, "Kartkówka", "Kartkówka Starożytna Grecja");
 
-
+    public static Grade mockGrade1 = new Grade(1L, 1L, 2L, 4F, new Date(), 7L);
 }
