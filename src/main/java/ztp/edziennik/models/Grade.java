@@ -23,15 +23,6 @@ public class Grade {
     public Grade() {
     }
 
-    public Grade(Long id, Long gradeTypeId, Long userId, Float value, Date creationDate, Long teacherId) {
-        this.id = id;
-        this.gradeTypeId = gradeTypeId;
-        this.userId = userId;
-        this.value = value;
-        this.creationDate = creationDate;
-        this.teacherId = teacherId;
-    }
-
     public Long getId() {
         return id;
     }

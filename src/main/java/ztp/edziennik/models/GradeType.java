@@ -16,14 +16,6 @@ public class GradeType {
     private String gradeName;
     private String gradeDesc;
 
-    public GradeType(Long id, Long groupId, Integer gradeWeight, String gradeName, String gradeDesc) {
-        this.id = id;
-        this.groupId = groupId;
-        this.gradeWeight = gradeWeight;
-        this.gradeName = gradeName;
-        this.gradeDesc = gradeDesc;
-    }
-
     public GradeType() {
     }
 
